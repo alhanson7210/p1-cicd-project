@@ -1,4 +1,6 @@
 name: CICD
+env:
+
 on:
   push:
     branches:
@@ -17,7 +19,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: test path
+      - name: Check path
         run: |
           ls -alt
           pwd
+
+      - name: Set up Python 3.6
+        uses:  actions/setup-python@v2
+        with:
+          python-version: 3.6
+
+      - name: Install Dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip3 install flake8 pytest requests python-bdd
+          if [ -f app/requirements.txt ]; then pip install -r app/requirements.txt; fi
+
+      - name: TDD
+        run: |
+          cd tests
+          make tdd
+          cd ..
+          ls -alt
+          pwd
+
+

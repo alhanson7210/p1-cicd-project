@@ -5,10 +5,6 @@ MODULE = unittest
 TDD_SRC = tdd_tests
 BDD_SRC = bdd_tests
 #[cmd]
-setup:
-	pip3 install pytest-bdd
-	pip3 install requests
-#[cmd]
 tdd:
 	echo "running tdd"
 	cd $(TDD_SRC)
