@@ -26,15 +26,15 @@ jobs:
           ls -alt
           pwd
 
-      - name: Set up Python 3.6
+      - name: Set up Python 3.9
         uses:  actions/setup-python@v2
         with:
-          python-version: 3.6
+          python-version: 3.9
 
       - name: Install Dependencies
         run: |
-          python3 -m pip install --upgrade pip python-bdd
-          pip3 install flake8 pytest requests
+          python3 -m pip install --upgrade pip
+          pip3 install flake8 pytest requests python-bdd
           if [ -f app/requirements.txt ]; then pip install -r app/requirements.txt; fi
 
       - name: TDD
