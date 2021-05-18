@@ -34,7 +34,8 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 pytest requests python-bdd
+          pip install flake8 pytest requests
+          pip install python-bdd
           if [ -f app/requirements.txt ]; then pip install -r app/requirements.txt; fi
 
       - name: TDD
