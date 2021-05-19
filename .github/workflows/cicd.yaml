@@ -35,7 +35,7 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip
           pip3 install flake8 pytest requests pytest-bdd
-          if [ -f app/requirements.txt ]; then pip install -r app/requirements.txt; fi
+          if [ -f app/requirements.txt ]; then pip3 install -r app/requirements.txt; fi
 
       - name: TDD
         run: |
