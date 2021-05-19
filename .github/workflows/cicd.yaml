@@ -42,4 +42,8 @@ jobs:
         run: |
           make tdd
 
+      - name: Set Dev Uri
+        run: |
+          o_O=$DEV_URI
+          echo $o_O
 
