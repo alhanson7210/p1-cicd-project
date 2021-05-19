@@ -1,5 +1,5 @@
 from flask import make_response, request, render_template
-from app.database_model import DatabaseManager
+from src.app import DatabaseManager
 from user_model import UserManager
 
 def get_cookie():
