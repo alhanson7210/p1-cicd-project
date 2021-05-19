@@ -2,6 +2,7 @@ name: CICD Pipeline
 
 env:
   DEV_URI: localhost
+  SVU: ${{ secrets.ENV_DVU }}
   REQ_PATH: ./src/app
 
 on:
@@ -44,9 +45,9 @@ jobs:
 
       - name: Set Dev Uri
         run: |
-          o_O=$DEV_URI
-          echo $o_O
-          OwO=${{ secrets.ENV_DVU }}
-          echo $OwO
+          DF=$DEV_URI
+          echo $DF
+          SV=$SVU
+          echo $SV
           python3 test.py
 
