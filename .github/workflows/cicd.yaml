@@ -49,5 +49,6 @@ jobs:
           echo $DF
           SV=$SVU
           echo $SV
+          echo 'SC ${{ secrets.ENV_DVU }}'
           python3 test.py
 
