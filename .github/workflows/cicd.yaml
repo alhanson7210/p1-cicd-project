@@ -46,6 +46,6 @@ jobs:
         run: |
           o_O=$DEV_URI
           echo $o_O
-          OwO=${{ secrets.D_URI }}
+          OwO=${{ secrets.ENV_DVU }}
           echo $OwO
 
