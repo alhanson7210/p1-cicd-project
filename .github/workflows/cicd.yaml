@@ -2,6 +2,7 @@ name: CICD
 
 env:
   DEV_URI: localhost
+  REQ_PATH: src/app
 
 on:
   push:
@@ -35,7 +36,7 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip
           pip3 install flake8 pytest requests pytest-bdd
-          if [ -f src/app/requirements.txt ]; then pip3 install -r src/app/requirements.txt; fi
+          if [ -f $REQ_PATH/requirements.txt ]; then pip3 install -r $REQ_PATH/requirements.txt; fi
 
       - name: TDD
         run: |
