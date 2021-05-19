@@ -2,7 +2,7 @@ name: CICD Pipeline
 
 env:
   DEV_URI: localhost
-  REQ_PATH: src/app
+  REQ_PATH: ./src/app
 
 on:
   push:
