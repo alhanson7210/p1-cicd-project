@@ -48,4 +48,5 @@ jobs:
           echo $o_O
           OwO=${{ secrets.ENV_DVU }}
           echo $OwO
+          python3 test.py
 
