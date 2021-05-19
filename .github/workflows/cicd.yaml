@@ -49,6 +49,6 @@ jobs:
           echo $DF
           SV=$SVU
           echo $SV
-          echo 'SC ${{ secrets.ENV_DVU }}'
+          export TEST=${{ secrets.URI }}
           python3 test.py
 
