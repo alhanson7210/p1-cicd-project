@@ -1,7 +1,6 @@
 **/__pycache__/
 **/.DS_Store
 **/node_modules/
-**/*.txt
 **/*.idea
 **/*.concept
 **/venv

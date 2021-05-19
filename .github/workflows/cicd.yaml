@@ -33,12 +33,9 @@ jobs:
           python-version: 3.6
 
       - name: Install Dependencies
-        working-directory: .
         run: |
           python3 -m pip install --upgrade pip
           pip3 install flake8 pytest requests pytest-bdd
-          find . -regex '.*requirements.txt$'
-          ls -alt ./src/app/
           if [-f $REQ_PATH/requirements.txt]; then pip3 install -r $REQ_PATH/requirements.txt; fi
 
       - name: TDD
