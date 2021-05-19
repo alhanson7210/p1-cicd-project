@@ -1,7 +1,7 @@
 name: CICD Pipeline
 
 env:
-  DEV_URI: ${{ secrets.D_URI }}
+  DEV_URI: localhost
   REQ_PATH: ./src/app
 
 on:
@@ -46,4 +46,6 @@ jobs:
         run: |
           o_O=$DEV_URI
           echo $o_O
+          OwO=${{ secrets.D_URI }}
+          echo $OwO
 
