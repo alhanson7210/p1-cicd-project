@@ -1,4 +1,4 @@
 import os
 
-dev_uri = os.getenv("0w0")
+dev_uri = os.getenv("OwO")
 print("uri:", dev_uri)
