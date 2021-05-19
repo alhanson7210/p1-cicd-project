@@ -2,7 +2,7 @@ name: CICD Pipeline
 
 env:
   DEV_URI: localhost
-  SVU: ${{ secrets.ENV_DVU }}
+  SVU: ${{ secrets.URI }}
   REQ_PATH: ./src/app
 
 on:
