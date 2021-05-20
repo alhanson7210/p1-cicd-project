@@ -1,9 +1,10 @@
 from flask import make_response, request, render_template
-from src.app import DatabaseManager
+from database_model import DatabaseManager
 from user_model import UserManager
 
 def get_cookie():
     user = request.cookies.get('username')
+    print(user)
 
 class Session:
     def __init__(self):

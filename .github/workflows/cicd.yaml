@@ -36,7 +36,7 @@ jobs:
       - name: Install Dependencies
         run: |
           python3 -m pip install --upgrade pip
-          pip3 install flake8 pytest requests pytest-bdd
+          pip3 install flake8 pytest requests pytest-bdd behave
           if [ -f $REQ_PATH/requirements.txt ]; then pip3 install -r $REQ_PATH/requirements.txt; fi
 
       - name: TDD
@@ -50,5 +50,7 @@ jobs:
           SV=$SVU
           echo $SV
           export TEST=${{ secrets.URI }}
-          python3 test.py
+          cd gh_checking
+          pytest
+          cd ..
 

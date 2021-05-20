@@ -4,3 +4,4 @@
 **/*.idea
 **/*.concept
 **/venv
+**/.pytest_cache
