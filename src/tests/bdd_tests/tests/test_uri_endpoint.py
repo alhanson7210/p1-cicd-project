@@ -3,14 +3,7 @@ import pytest
 import requests
 from pytest_bdd import scenarios, when, then
 
-dev_uri = os.getenv("DF")
-print("uri:", dev_uri)
-
-df_uri = os.getenv("SV")
-print("df uri:", df_uri)
-
 test_uri = os.getenv("TEST")
-print("test uri:", test_uri)
 
 ENDPOINT_PATH = "http://localhost" if not test_uri else test_uri
 FEATURE = "../features/uri_endpoint.feature"

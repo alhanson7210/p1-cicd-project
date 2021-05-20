@@ -1,8 +1,6 @@
 name: CICD Pipeline
 
 env:
-  DEV_URI: localhost
-  SVU: ${{ secrets.URI }}
   REQ_PATH: ./src/app
 
 on:
@@ -23,10 +21,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Check path
+      - name: Sanity check for path
         run: |
-          ls -alt
-          pwd
+          ls
 
       - name: Set up Python 3.6
         uses:  actions/setup-python@v2
@@ -39,18 +36,47 @@ jobs:
           pip3 install flake8 pytest requests pytest-bdd behave
           if [ -f $REQ_PATH/requirements.txt ]; then pip3 install -r $REQ_PATH/requirements.txt; fi
 
-      - name: TDD
+      - name: TDD Tests
         run: |
           make tdd
 
-      - name: Set Dev Uri
+      - name: Configure AWS credentials
         run: |
-          DF=$DEV_URI
-          echo $DF
-          SV=$SVU
-          echo $SV
-          export TEST=${{ secrets.URI }}
-          cd gh_checking
-          pytest
-          cd ..
+          echo "fill in configuration"
 
+      - name: Login to Amazon ECR
+        run: |
+          echo "fill in login"
+
+      - name: Docker build and push to dev
+        run: |
+          echo "fill in build steps"
+
+      - name: Update task definition dev
+        run: |
+          echo "fill in update task def step"
+
+      - name: Deploy Amazon ECS task definition dev
+        run: |
+          echo "fill in deploy task def step"
+
+      - name: BDD Tests
+        run: |
+          export TEST=${{ secrets.URI }}
+          make bdd
+
+      - name: Docker build and push to prod
+        run: |
+          echo "fill in prod build docker step"
+
+      - name: Update task definition prod
+        run: |
+          echo "fill in prod task def"
+
+      - name: Deploy Amazon ECS task definition prod
+        run: |
+          echo "fill in prod deploy task def"
+
+      - name: Finished CICD PIPELINE
+        run: |
+          echo "All services should be updated in prod and dev"
