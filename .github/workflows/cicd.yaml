@@ -1,8 +1,7 @@
 name: CICD Pipeline
-
 env:
-  REQ_PATH: ./src/app
-
+  REQ_PATH: src/app
+  FROM_APP_BACK_TO_ROOT: ../..
 on:
   push:
     branches:
@@ -11,72 +10,106 @@ on:
     branches:
       - main
   workflow_dispatch:
-
 jobs:
   cicd:
     name: CICD
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
       - name: Sanity check for path
         run: |
           ls
-
+        
       - name: Set up Python 3.6
         uses:  actions/setup-python@v2
         with:
           python-version: 3.6
-
+        
       - name: Install Dependencies
         run: |
           python3 -m pip install --upgrade pip
           pip3 install flake8 pytest requests pytest-bdd behave
           if [ -f $REQ_PATH/requirements.txt ]; then pip3 install -r $REQ_PATH/requirements.txt; fi
-
+        
       - name: TDD Tests
         run: |
           make tdd
-
+        
       - name: Configure AWS credentials
-        run: |
-          echo "fill in configuration"
-
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+        
       - name: Login to Amazon ECR
-        run: |
-          echo "fill in login"
-
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      
       - name: Docker build and push to dev
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: dev-alhanson
+          IMAGE_TAG: ${{ github.sha }}
         run: |
-          echo "fill in build steps"
-
+          cd $REQ_PATH
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          cd $FROM_APP_BACK_TO_ROOT
+        
       - name: Update task definition dev
-        run: |
-          echo "fill in update task def step"
-
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition-dev.json
+          container-name: dev-alhanson
+          image: ${{ steps.build-image.outputs.image }}
+        
       - name: Deploy Amazon ECS task definition dev
-        run: |
-          echo "fill in deploy task def step"
-
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: dev-alhanson
+          cluster: dev-alhanson
+          wait-for-service-stability: true
+        
       - name: BDD Tests
         run: |
           export TEST=${{ secrets.URI }}
           make bdd
-
+        
       - name: Docker build and push to prod
+        id: build-image-prod
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: prod-alhanson
+          IMAGE_TAG: ${{ github.sha }}
         run: |
-          echo "fill in prod build docker step"
-
+          cd $REQ_PATH
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          cd $FROM_APP_BACK_TO_ROOT
+        
       - name: Update task definition prod
-        run: |
-          echo "fill in prod task def"
-
+        id: task-def-prod
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition-prod.json
+          container-name: prod-alhanson
+          image: ${{ steps.build-image-prod.outputs.image }}
+        
       - name: Deploy Amazon ECS task definition prod
-        run: |
-          echo "fill in prod deploy task def"
-
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def-prod.outputs.task-definition }}
+          service: prod-alhanson
+          cluster: prod-alhanson
+          wait-for-service-stability: true
+        
       - name: Finished CICD PIPELINE
         run: |
           echo "All services should be updated in prod and dev"
